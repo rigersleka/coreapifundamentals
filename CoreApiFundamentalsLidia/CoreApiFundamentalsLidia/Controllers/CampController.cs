@@ -1,5 +1,6 @@
 ﻿using CoreApiFundamentalsLidia.DTOs;
 using CoreApiFundamentalsLidia.Services;
+using CoreApiFundamentalsLidia.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -26,34 +27,37 @@ namespace CoreApiFundamentalsLidia.Controllers
         }
 
         [HttpPost]
-        public void Add(CampDTO entity)
+        public async Task<ActionResult> Add(CreateCampDTO entity)
         {
             try
             {
-                _campService.Add(entity);
+                await _campService.Add(entity);
+                return Ok();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
             }
-
         }
 
         [HttpDelete]
-        public void Delete(CampDTO entity)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                _campService.Delete(entity);
+                await _campService.Delete(id);
+                return Ok();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CampDTO>> GetAllCampAsync(bool includeTalks = false)
+        public async Task<ActionResult<IEnumerable<CampDTO>>> GetAllCampAsync(bool includeTalks = false)
         {
             var models = new List<CampDTO>();
             try
@@ -65,15 +69,15 @@ namespace CoreApiFundamentalsLidia.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return BadRequest("Not Found");
             }
 
-            return models;
+            return Ok(models);
 
         }
 
-        // do japi error ;) PO UN DO E BEJ :p
         [HttpGet("GetByDate")]
-        public async Task<IEnumerable<CampDTO>> GetAllCampsByEventDate(DateTime dateTime, bool includeTalks = false)
+        public async Task<ActionResult<IEnumerable<CampDTO>>> GetAllCampsByEventDate(DateTime dateTime, bool includeTalks = false)
         {
             var models = new List<CampDTO>();
 
@@ -87,9 +91,27 @@ namespace CoreApiFundamentalsLidia.Controllers
                 _logger.LogError(ex.Message);
             }
 
-            return models;
+            return Ok(models);
         }
 
+        // PUT: /camp/update
+        [HttpPut("Update")]
+        public async Task<ActionResult> UpdateCamp([FromBody] CampDTO entity)
+        {
+
+            try
+            {
+                // get campById
+                await _campService.Update(entity);
+
+                return Ok(new { message = Messages.UPDATED_SUCCESFULLY });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
 
 
     }

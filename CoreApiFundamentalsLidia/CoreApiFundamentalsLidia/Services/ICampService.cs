@@ -8,8 +8,9 @@ namespace CoreApiFundamentalsLidia.Services
 {
     public interface ICampService
     {
-        void Add(CampDTO entity);
-        void Delete(CampDTO entity);
+        Task Add(CreateCampDTO entity);
+        Task Delete(int id);
+        Task Update(CampDTO entity);
         Task<IEnumerable<CampDTO>> GetAllCampsAsync(bool includeTalks = false);
         Task<CampDTO> GetCampAsync(string moniker, bool includeTalks = false);
         Task<IEnumerable<CampDTO>> GetAllCampsByEventDate(DateTime dateTime, bool includeTalks = false);

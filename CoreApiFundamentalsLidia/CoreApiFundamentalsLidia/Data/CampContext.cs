@@ -27,14 +27,14 @@ namespace CoreApiFundamentalsLidia.Data
         protected override void OnModelCreating(ModelBuilder bldr)
         {
             bldr.Entity<Camp>()
-          .HasData(new
+          .HasData(new Camp
           {
               Id = 1,
               Moniker = "ATL2018",
               Name = "Atlanta Code Camp",
               EventDate = new DateTime(2018, 10, 18),
               //LocationId = 1,
-              Length = 1
+               Length=1
           });
 
 

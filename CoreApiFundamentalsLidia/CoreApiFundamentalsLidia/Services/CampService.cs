@@ -25,12 +25,12 @@ namespace CoreApiFundamentalsLidia.Services
             _repository = repository;
         }
 
-        public void Add(CampDTO entity)
+        public async Task Add(CreateCampDTO entity)
         {
             try
             {
                 var model = _mapper.Map<Camp>(entity);
-                _repository.Add(model);
+                await _repository.Add(model);
 
                 _logger.LogInformation(Messages.ADDED_SUCCESSFULLY);
             }
@@ -40,19 +40,51 @@ namespace CoreApiFundamentalsLidia.Services
             }
         }
 
-        public void Delete(CampDTO entity)
+        public async Task Delete(int id)
         {
             try
             {
-                var model = _mapper.Map<Camp>(entity);
-                _repository.Delete(model);
+                var entity = await _repository.GetById(id);
+
+                if (entity == null || entity.Id == 0)
+                {
+                    throw new Exception("Camp object is null.");
+                }
+                await _repository.Delete(entity);
 
                 _logger.LogInformation(Messages.DELETED_SUCCESSFULLY);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                throw;
+
             }
+        }
+
+        public async Task Update(CampDTO entity)
+        {
+            try
+            {
+
+                var camp = await _repository.GetById(entity.Id);
+                if (camp == null)
+                {
+                    throw new Exception("Camp object is null.");
+                }
+                camp.Name = entity.Name;
+                camp.Moniker = entity.Moniker;
+                camp.EventDate = entity.EventDate;
+                camp.Length = entity.Length;
+
+                await _repository.UpdateCamp(camp);
+                _logger.LogInformation(Messages.UPDATED_SUCCESFULLY);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
         }
 
         public async Task<IEnumerable<CampDTO>> GetAllCampsAsync(bool includeTalks = false)

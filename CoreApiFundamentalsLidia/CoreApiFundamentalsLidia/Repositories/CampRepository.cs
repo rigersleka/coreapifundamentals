@@ -21,12 +21,13 @@ namespace CoreApiFundamentalsLidia.Data
             _logger = logger;
         }
 
-        public void Add(Camp entity)
+        public async Task Add(Camp entity)
         {
             try
             {
                 _logger.LogInformation(Messages.ADDED_SUCCESSFULLY);
-                _context.Add(entity);
+                await _context.AddAsync(entity);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -34,11 +35,12 @@ namespace CoreApiFundamentalsLidia.Data
             }
         }
 
-        public void Delete(Camp entity)
+        public async Task Delete(Camp entity)
         {
             try
             {
                 _context.Remove(entity);
+                await _context.SaveChangesAsync();
                 _logger.LogInformation(Messages.DELETED_SUCCESSFULLY);
             }
             catch (Exception ex)
@@ -46,6 +48,20 @@ namespace CoreApiFundamentalsLidia.Data
                 _logger.LogError(ex.Message);
             }
 
+        }
+
+        public async Task UpdateCamp(Camp entity)
+        {
+            try
+            {
+                _context.Update(entity);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation(Messages.UPDATED_SUCCESFULLY);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
         }
 
         public async Task<IEnumerable<Camp>> GetAllCampsAsync(bool includeTalks = false)
@@ -104,5 +120,24 @@ namespace CoreApiFundamentalsLidia.Data
 
             return model;
         }
+        public async Task<Camp> GetById(int id)
+        {
+            var model = new Camp();
+
+            try
+            {
+                model = await _context.Camps
+                       .Where(c => c.Id == id)
+                       .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
+            return model;
+        }
+
+
     }
 }

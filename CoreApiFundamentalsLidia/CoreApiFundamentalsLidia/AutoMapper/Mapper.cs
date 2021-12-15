@@ -13,6 +13,8 @@ namespace CoreApiFundamentalsLidia.AutoMapper
         public Mapper()
         {          
             CreateMap<CampDTO, Camp>().ReverseMap();
+
+            CreateMap<CreateCampDTO, Camp>().ReverseMap();
         }
     }
 }

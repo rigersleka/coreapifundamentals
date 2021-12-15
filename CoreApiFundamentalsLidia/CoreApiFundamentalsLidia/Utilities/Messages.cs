@@ -10,6 +10,7 @@ namespace CoreApiFundamentalsLidia.Utilities
         public const string ADDED_SUCCESSFULLY = "The entity is added successfully!";
         public const string DELETED_SUCCESSFULLY = "The entity is deleted successfully!";
         public const string GET_SUCCESSFULLY = "The entity is get successfully!";
-        
+        public const string UPDATED_SUCCESFULLY = "The entity is updated succesfully";
+
     }
 }
